@@ -11,6 +11,7 @@ import kz.iitu.armarketplace.repository.RoleRepository;
 import kz.iitu.armarketplace.repository.UserRepository;
 import kz.iitu.armarketplace.security.jwt.JwtUtils;
 import kz.iitu.armarketplace.service.security.UserDetailsImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,21 +30,17 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
-	@Autowired
-	AuthenticationManager authenticationManager;
+	private final AuthenticationManager authenticationManager;
 
-	@Autowired
-	UserRepository userRepository;
+	private final UserRepository userRepository;
 
-	@Autowired
-	RoleRepository roleRepository;
+	private final RoleRepository roleRepository;
 
-	@Autowired
-	PasswordEncoder encoder;
+	private final PasswordEncoder encoder;
 
-	@Autowired
-	JwtUtils jwtUtils;
+	private final JwtUtils jwtUtils;
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
