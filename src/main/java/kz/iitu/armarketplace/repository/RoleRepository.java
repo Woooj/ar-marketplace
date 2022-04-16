@@ -13,5 +13,4 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
 
 	Optional<RoleEntity> findByName(RoleEnum name);
 
-//	Optional<List<RoleEntity>> saveAll(List<RoleEntity> roles);
 }

@@ -21,11 +21,6 @@ public class TestController {
 	private final RoleRepository roleRepository;
 	@GetMapping("/all")
 	public String allAccess() {
-
-		roleRepository.saveAll(Arrays.asList(
-			new RoleEntity(RoleEnum.ROLE_ADMIN),
-			new RoleEntity(RoleEnum.ROLE_USER),
-			new RoleEntity(RoleEnum.ROLE_MODERATOR)));
 		return "Public Content.";
 	}
 
