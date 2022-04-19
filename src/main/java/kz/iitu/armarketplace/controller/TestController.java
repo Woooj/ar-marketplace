@@ -1,16 +1,19 @@
 package kz.iitu.armarketplace.controller;
 
+import kz.iitu.armarketplace.entity.CategoryEntity;
+import kz.iitu.armarketplace.entity.ProductEntity;
 import kz.iitu.armarketplace.entity.RoleEntity;
 import kz.iitu.armarketplace.enums.RoleEnum;
+import kz.iitu.armarketplace.model.ProductDTO;
+import kz.iitu.armarketplace.repository.CategoryRepository;
+import kz.iitu.armarketplace.repository.ProductRepository;
 import kz.iitu.armarketplace.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.Date;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -19,9 +22,32 @@ import java.util.Arrays;
 public class TestController {
 
 	private final RoleRepository roleRepository;
+	private final ProductRepository productRepository;
+
+	private final CategoryRepository categoryRepository;
 	@GetMapping("/all")
 	public String allAccess() {
 		return "Public Content.";
+	}
+
+	@PostMapping("/save-product")
+	public void saveProduct(@RequestBody ProductDTO product) {
+
+		productRepository.save(ProductEntity.builder()
+				.name(product.name)
+				.description(product.description)
+				.rating(product.rating)
+				.price(product.price)
+				.createdAt(new Date())
+				.build());
+	}
+
+	@PostMapping("/save-category")
+	public void saveCategory(@RequestBody String categoryName) {
+
+		categoryRepository.save(CategoryEntity.builder()
+				.name(categoryName)
+				.build());
 	}
 
 	@GetMapping("/user")
