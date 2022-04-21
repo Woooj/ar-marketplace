@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @Builder
@@ -18,23 +19,21 @@ public class ProductEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column
 	private String name;
 
-	@Column
 	private String description;
 
-	@Column
 	private BigDecimal rating;
 
-	@Column
 	private Integer price;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id", referencedColumnName = "id")
 	private CategoryEntity categoryId;
 
-	@Column
 	private Date createdAt;
+
+	@OneToMany
+	private Set<FileEntity> mediaFiles;
 
 }
