@@ -27,7 +27,7 @@ public class ProductsController {
 		return productRepository.findById(id).orElseThrow(() -> new RuntimeException("There is no product with id: " + id));
 	}
 
-	@GetMapping("/get/{categoryId}")
+	@GetMapping("/get-by-category/{categoryId}")
 	public List<ProductEntity> getByCategory(@PathVariable("categoryId") Long categoryId) {
 
 		return productRepository.findByCategoryId(categoryId).orElseThrow(() -> new RuntimeException("There is no product with category id: " + categoryId));
