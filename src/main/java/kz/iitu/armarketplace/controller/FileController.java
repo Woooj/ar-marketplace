@@ -15,12 +15,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
-@RestController
-@RequestMapping("/product-photos")
+//@RequiredArgsConstructor
+//@RestController
+//@RequestMapping("/product-photos")
 public class FileController {
 
-	private final FileService fileService;
+//	private final FileService fileService;
 
 //	@PostMapping("/upload")
 //	public ResponseEntity<MessageResponse> uploadFile(@RequestBody FileToSave fileToSave) {
