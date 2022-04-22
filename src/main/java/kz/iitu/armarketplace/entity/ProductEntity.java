@@ -27,13 +27,20 @@ public class ProductEntity {
 
 	private Integer price;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "category_id", referencedColumnName = "id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "category_id")
 	private CategoryEntity categoryId;
 
 	private Date createdAt;
 
 	@OneToMany
 	private Set<FileEntity> mediaFiles;
+
+	@Transient
+	public String getImagesPath() {
+		if (mediaFiles == null || id == null) return null;
+
+		return "/product-photos/" + id + "/";
+	}
 
 }

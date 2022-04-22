@@ -10,9 +10,15 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ProductDTO {
 
+	public Long id;
+
 	public String name;
 	public String description;
 	public BigDecimal rating;
 	public Integer price;
+
+	public String categoryName;
+
+	public String filePath;
 
 }

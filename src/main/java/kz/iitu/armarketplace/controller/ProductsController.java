@@ -1,8 +1,13 @@
 package kz.iitu.armarketplace.controller;
 
-import kz.iitu.armarketplace.entity.ProductEntity;
-import kz.iitu.armarketplace.repository.ProductRepository;
+import kz.iitu.armarketplace.entity.CategoryEntity;
+import kz.iitu.armarketplace.model.ProductDTO;
+import kz.iitu.armarketplace.model.ProductToSave;
+import kz.iitu.armarketplace.model.ProductsResponse;
+import kz.iitu.armarketplace.service.FileService;
+import kz.iitu.armarketplace.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,24 +18,41 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductsController {
 
-	private final ProductRepository productRepository;
+	private final ProductService productService;
+
+	private final FileService fileService;
 
 	@GetMapping("/all")
-	public List<ProductEntity> getAll() {
+	public ProductsResponse getAll(@RequestParam(name = "category", required = false) String category,
+																									@RequestParam(name = "rating", required = false) Double rating,
+																									@RequestParam(name = "price", required = false) Integer price) {
 
-		return productRepository.findAll();
+		return productService.getAllProductsWithFilter(category, rating, price);
 	}
 
 	@GetMapping("/get/{id}")
-	public ProductEntity getById(@PathVariable("id") Long id) {
+	public ProductDTO getById(@PathVariable("id") Long id) {
 
-		return productRepository.findById(id).orElseThrow(() -> new RuntimeException("There is no product with id: " + id));
+		return productService.getById(id);
 	}
 
 	@GetMapping("/get-by-category/{categoryId}")
-	public List<ProductEntity> getByCategory(@PathVariable("categoryId") Long categoryId) {
+	public List<ProductDTO> getByCategory(@PathVariable("categoryId") Integer categoryId) {
 
-		return productRepository.findByCategoryId(categoryId).orElseThrow(() -> new RuntimeException("There is no product with category id: " + categoryId));
+		return productService.getByCategory(categoryId);
+	}
+
+	@PostMapping("/save")
+	public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductToSave product) {
+
+		return ResponseEntity.ok(productService.saveProduct(product));
+	}
+
+
+	@GetMapping("/categories/all")
+	public List<CategoryEntity> getAllCategories() {
+
+		return productService.getAllCategories();
 	}
 
 }

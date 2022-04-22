@@ -15,4 +15,6 @@ public interface FileService {
 
 	Stream<FileEntity> getAllFiles();
 
+	void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException;
+
 }
