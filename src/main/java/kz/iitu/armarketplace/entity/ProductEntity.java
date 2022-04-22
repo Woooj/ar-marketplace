@@ -4,7 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -33,12 +35,13 @@ public class ProductEntity {
 
 	private Date createdAt;
 
-	@OneToMany
-	private Set<FileEntity> mediaFiles;
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(referencedColumnName = "id")
+	private List<FileEntity> imgProducts = new ArrayList<>();
 
 	@Transient
 	public String getImagesPath() {
-		if (mediaFiles == null || id == null) return null;
+		if (imgProducts == null || id == null) return null;
 
 		return "/product-photos/" + id + "/";
 	}

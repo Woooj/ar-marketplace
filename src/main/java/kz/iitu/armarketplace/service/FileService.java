@@ -5,6 +5,7 @@ import kz.iitu.armarketplace.model.FileToSave;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Stream;
 
 public interface FileService {
@@ -17,4 +18,5 @@ public interface FileService {
 
 	void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException;
 
+	List<FileEntity> getAllFilesByProduct(Long id);
 }

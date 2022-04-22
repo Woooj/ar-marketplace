@@ -1,6 +1,7 @@
 package kz.iitu.armarketplace.service.impl;
 
 import kz.iitu.armarketplace.entity.CategoryEntity;
+import kz.iitu.armarketplace.entity.FileEntity;
 import kz.iitu.armarketplace.entity.ProductEntity;
 import kz.iitu.armarketplace.model.FileToSave;
 import kz.iitu.armarketplace.model.ProductDTO;
@@ -13,14 +14,12 @@ import kz.iitu.armarketplace.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static org.apache.logging.log4j.util.Strings.isBlank;
 import static org.apache.logging.log4j.util.Strings.isNotBlank;
@@ -90,20 +89,34 @@ public class ProductServiceImpl implements ProductService {
 
 		ProductEntity saved = productRepository.save(saveToEntity(product));
 
-		String fileName = StringUtils.cleanPath(product.getFile().getOriginalFilename());
+		Long productId = saved.getId();
 
-		String uploadDir = "product-photos/" + saved.getId();
+		for (MultipartFile file : product.getFiles()) {
 
-		try {
-			fileService.saveFile(uploadDir, fileName, product.getFile());
-		} catch (IOException ignored) {
-			System.out.println("error " + ignored.getMessage());
+			String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+
+			String uploadDir = "product-photos/" + productId;
+
+			try {
+				fileService.store(new FileToSave(fileName, productId));
+				fileService.saveFile(uploadDir, fileName, file);
+			} catch (IOException ignored) {
+				System.out.println("error " + ignored.getMessage());
+			}
+
 		}
+
 
 		return convertToDTO(saved);
 	}
 
 	private ProductEntity saveToEntity(ProductToSave product) {
+
+		List<String> paths = new ArrayList<>();
+
+		for (MultipartFile file : product.files) {
+			paths.add(product.id + "/" + file.getOriginalFilename());
+		}
 
 		return ProductEntity.builder()
 			.id(product.id)
@@ -112,6 +125,7 @@ public class ProductServiceImpl implements ProductService {
 			.categoryId(categoryRepository.findById(product.category).orElseThrow(() -> new RuntimeException("No such category")))
 			.rating(BigDecimal.ZERO)
 			.price(product.price)
+//			.imgProducts(paths)
 			.createdAt(new Date())
 			.build();
 	}
@@ -152,6 +166,9 @@ public class ProductServiceImpl implements ProductService {
 		for(ProductEntity productEntity : all)
 			{
 				CategoryEntity category = productEntity.getCategoryId();
+				List<String> paths = new ArrayList<>();
+				List<FileEntity> mediaFiles = fileService.getAllFilesByProduct(productEntity.getId());
+				mediaFiles.forEach(i -> paths.add(i.getPath()));
 				ProductDTO dto = ProductDTO.builder()
 					.id(productEntity.getId())
 					.name(productEntity.getName())
@@ -159,6 +176,7 @@ public class ProductServiceImpl implements ProductService {
 					.rating(productEntity.getRating())
 					.price(productEntity.getPrice())
 					.categoryName(category != null ? category.getName() : "")
+					.filePath(paths)
 					.build();
 
 				dtoList.add(dto);

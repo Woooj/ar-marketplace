@@ -10,12 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.stream.Stream;
 
 @Service
@@ -26,15 +28,13 @@ public class FileServiceImpl implements FileService {
 
 	private final ProductRepository productRepository;
 
+	@Transactional
 	public FileEntity store(FileToSave fileToSave) throws IOException {
 
-		String fileName = StringUtils.cleanPath(fileToSave.getFile().getOriginalFilename());
 
 		FileEntity fileToDb = FileEntity.builder()
-			.data(fileToSave.getFile().getBytes())
-			.mimeType(fileToSave.getFile().getContentType())
-			.name(fileName)
-			.products(productRepository.getById(fileToSave.getProductId()))
+			.productId(fileToSave.getProductId())
+			.path(fileToSave.getProductId() + "/" + fileToSave.getName())
 			.build();
 		return fileRepository.save(fileToDb);
 	}
@@ -62,5 +62,11 @@ public class FileServiceImpl implements FileService {
 		} catch (IOException ioe) {
 			throw new IOException("Could not save image file: " + fileName, ioe);
 		}
+	}
+
+	@Override
+	public List<FileEntity> getAllFilesByProduct(Long id) {
+
+		return fileRepository.findAllByProductId(id);
 	}
 }

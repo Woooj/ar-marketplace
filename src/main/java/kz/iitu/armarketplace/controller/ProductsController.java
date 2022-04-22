@@ -7,6 +7,7 @@ import kz.iitu.armarketplace.model.ProductsResponse;
 import kz.iitu.armarketplace.service.FileService;
 import kz.iitu.armarketplace.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,8 +43,8 @@ public class ProductsController {
 		return productService.getByCategory(categoryId);
 	}
 
-	@PostMapping("/save")
-	public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductToSave product) {
+	@PostMapping(value = "/save")
+	public ResponseEntity<ProductDTO> addProduct(ProductToSave product) {
 
 		return ResponseEntity.ok(productService.saveProduct(product));
 	}

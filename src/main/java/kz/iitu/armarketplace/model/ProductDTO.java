@@ -3,6 +3,7 @@ package kz.iitu.armarketplace.model;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Builder
@@ -19,6 +20,6 @@ public class ProductDTO {
 
 	public String categoryName;
 
-	public String filePath;
+	public List<String> filePath;
 
 }

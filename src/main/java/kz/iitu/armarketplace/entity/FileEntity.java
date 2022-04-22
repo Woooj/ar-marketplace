@@ -22,14 +22,8 @@ public class FileEntity {
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	private String id;
 
-	private String name;
+	private String path;
 
-	@Lob
-	private byte[] data;
-
-	private String mimeType;
-
-	@ManyToOne
-	@JoinColumn(name = "product_id")
-	private ProductEntity products;
+	@Column(name = "product_id")
+	private Long productId;
 }
