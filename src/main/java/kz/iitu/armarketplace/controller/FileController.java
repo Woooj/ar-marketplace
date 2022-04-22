@@ -12,15 +12,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@RequiredArgsConstructor
-//@RestController
-//@RequestMapping("/product-photos")
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/files")
 public class FileController {
 
-//	private final FileService fileService;
+	private final FileService fileService;
+
+
+	@GetMapping("/check")
+	public void checkFile(@RequestParam("id") long id) {
+		File f = new File("/product-photos/16/iracor_paint.jpg");
+		System.out.println("asd " + f.isFile() + f.exists() + " " + f.getAbsolutePath());
+	}
+
 
 //	@PostMapping("/upload")
 //	public ResponseEntity<MessageResponse> uploadFile(@RequestBody FileToSave fileToSave) {
