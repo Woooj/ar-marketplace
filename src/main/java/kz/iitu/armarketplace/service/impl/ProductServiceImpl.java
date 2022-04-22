@@ -38,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public ProductsResponse getAllProductsWithFilter(String category, Double rating, Integer price) {
 
-		List<ProductDTO> dtoList = new ArrayList<>();
+		List<ProductDTO> dtoList;
 
 		if (isBlank(category) && rating == null && price == null) {
 				dtoList = convertListToDTO(productRepository.findAll());
@@ -150,12 +150,14 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductDTO> dtoList = new ArrayList<>();
 		for(ProductEntity productEntity : all)
 			{
+				CategoryEntity category = productEntity.getCategoryId();
 				ProductDTO dto = ProductDTO.builder()
+					.id(productEntity.getId())
 					.name(productEntity.getName())
 					.description(productEntity.getDescription())
 					.rating(productEntity.getRating())
 					.price(productEntity.getPrice())
-					.categoryName(productEntity.getCategoryId().getName())
+					.categoryName(category != null ? category.getName() : "")
 					.build();
 
 				dtoList.add(dto);
