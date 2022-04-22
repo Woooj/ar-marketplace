@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/files")
+@RequestMapping("/product-photos")
 public class FileController {
 
 	private final FileService fileService;

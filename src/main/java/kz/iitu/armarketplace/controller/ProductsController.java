@@ -24,11 +24,13 @@ public class ProductsController {
 	private final FileService fileService;
 
 	@GetMapping("/all")
-	public ProductsResponse getAll(@RequestParam(name = "category", required = false) String category,
-																									@RequestParam(name = "rating", required = false) Double rating,
-																									@RequestParam(name = "price", required = false) Integer price) {
+	public ProductsResponse getAll(@RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
+																 @RequestParam(name = "pageSize", defaultValue = "16", required = false) Integer pageSize,
+																 @RequestParam(name = "category", required = false) String category,
+																 @RequestParam(name = "sort", required = false) String sort,
+																 @RequestParam(name = "sortType", required = false) String sortType) {
 
-		return productService.getAllProductsWithFilter(category, rating, price);
+		return productService.getAllProductsWithFilter(page, pageSize, category, sort, sortType);
 	}
 
 	@GetMapping("/get/{id}")

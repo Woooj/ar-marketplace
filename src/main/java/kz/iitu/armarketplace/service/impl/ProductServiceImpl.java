@@ -12,6 +12,9 @@ import kz.iitu.armarketplace.repository.ProductRepository;
 import kz.iitu.armarketplace.service.FileService;
 import kz.iitu.armarketplace.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,36 +38,34 @@ public class ProductServiceImpl implements ProductService {
 	private final FileService fileService;
 
 	@Override
-	public ProductsResponse getAllProductsWithFilter(String category, Double rating, Integer price) {
+	public ProductsResponse getAllProductsWithFilter(Integer page, Integer pageSize, String category, String sort, String sortType) {
 
 		List<ProductDTO> dtoList;
+		Pageable pageable;
 
-		if (isBlank(category) && rating == null && price == null) {
-				dtoList = convertListToDTO(productRepository.findAll());
-				return new ProductsResponse(dtoList, dtoList.size());
-			} else if (isNotBlank(category) && rating == null && price == null) {
-
-				CategoryEntity categoryEntity = categoryRepository.findByName(category).orElse(new CategoryEntity());
-
-				if (Objects.isNull(categoryEntity.getId())) {
-					return new ProductsResponse(new ArrayList<>(), 0);
-				}
-				dtoList = convertListToDTO(productRepository.findAllByCategoryId(categoryEntity));
-				return new ProductsResponse(dtoList, dtoList.size());
-
+		if(sort == null || sort.equals("")) {
+			pageable = PageRequest.of(page, pageSize);
+		} else {
+			if (sortType.equals("DESC")) {
+				pageable = PageRequest.of(page, pageSize, Sort.by(sort).descending());
 			} else {
+				pageable = PageRequest.of(page, pageSize, Sort.by(sort));
+			}
+		}
 
-				CategoryEntity categoryEntity = categoryRepository.findByName(category).orElse(new CategoryEntity());
+		if (isBlank(category)) {
+				dtoList = convertListToDTO(productRepository.findAll(pageable).getContent());
+				return new ProductsResponse(dtoList, dtoList.size());
+			}
+
+			CategoryEntity categoryEntity = categoryRepository.findByName(category).orElse(new CategoryEntity());
 
 			if (Objects.isNull(categoryEntity.getId())) {
 				return new ProductsResponse(new ArrayList<>(), 0);
 			}
+			dtoList = convertListToDTO(productRepository.findAllByCategoryId(categoryEntity, pageable));
+			return new ProductsResponse(dtoList, dtoList.size());
 
-				dtoList = convertListToDTO(productRepository.findAllByCategoryIdAndRatingAndPrice(categoryEntity,
-					BigDecimal.valueOf(rating), price));
-				return new ProductsResponse(dtoList, dtoList.size());
-
-			}
 	}
 
 	@Override

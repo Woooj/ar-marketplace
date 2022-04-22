@@ -2,6 +2,7 @@ package kz.iitu.armarketplace.repository;
 
 import kz.iitu.armarketplace.entity.CategoryEntity;
 import kz.iitu.armarketplace.entity.ProductEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.NonNull;
@@ -23,7 +24,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 																													 @NonNull BigDecimal rating,
 																													 @NonNull Integer price);
 
-	List<ProductEntity> findAllByCategoryId(@NonNull CategoryEntity category);
+	List<ProductEntity> findAllByCategoryId(@NonNull CategoryEntity category, Pageable pageable);
 
 	Optional<ProductEntity> findById(@NonNull Long id);
 
