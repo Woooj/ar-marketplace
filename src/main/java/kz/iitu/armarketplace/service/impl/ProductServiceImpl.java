@@ -106,6 +106,7 @@ public class ProductServiceImpl implements ProductService {
 	private ProductEntity saveToEntity(ProductToSave product) {
 
 		return ProductEntity.builder()
+			.id(product.id)
 			.name(product.name)
 			.description(product.description)
 			.categoryId(categoryRepository.findById(product.category).orElseThrow(() -> new RuntimeException("No such category")))

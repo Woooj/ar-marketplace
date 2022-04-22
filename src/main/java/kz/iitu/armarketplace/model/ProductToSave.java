@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ProductToSave {
 
+	public Long id;
+
 	public String name;
 
 	public String description;
