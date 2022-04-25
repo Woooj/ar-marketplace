@@ -18,4 +18,6 @@ public interface ProductService {
 	ProductDTO saveProduct(ProductToSave product);
 
 	List<CategoryEntity> getAllCategories();
+
+	ProductsResponse search(String searchWord);
 }

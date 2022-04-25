@@ -39,6 +39,12 @@ public class ProductsController {
 		return productService.getById(id);
 	}
 
+	@GetMapping("/search")
+	public ProductsResponse searchProduct(@RequestParam("searchWord") String searchWord) {
+
+		return productService.search(searchWord);
+	}
+
 	@GetMapping("/get-by-category/{categoryId}")
 	public List<ProductDTO> getByCategory(@PathVariable("categoryId") Integer categoryId) {
 

@@ -69,6 +69,21 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
+	public ProductsResponse search(String searchWord) {
+
+		if (isBlank(searchWord.trim())) {
+			throw new RuntimeException("Empty search data");
+		}
+
+		List<ProductEntity> productsBySearchWord = productRepository.getProductsBySearchWord(searchWord.trim());
+
+		return ProductsResponse.builder()
+			.list(convertListToDTO(productsBySearchWord))
+			.total(productsBySearchWord.size())
+			.build();
+	}
+
+	@Override
 	public ProductDTO getById(Long id) {
 
 		return convertToDTO(productRepository.findById(id)
