@@ -18,6 +18,8 @@ public class ProductDTO {
 	public BigDecimal rating;
 	public Integer price;
 
+	public Integer amount;
+
 	public String categoryName;
 
 	public List<String> filePath;

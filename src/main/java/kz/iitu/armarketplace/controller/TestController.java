@@ -38,6 +38,7 @@ public class TestController {
 				.description(product.description)
 				.rating(product.rating)
 				.price(product.price)
+				.amount(product.amount)
 				.createdAt(new Date())
 				.categoryId(categoryRepository.findByName(product.categoryName).orElseThrow(() -> new RuntimeException("There is no such category")))
 				.build());

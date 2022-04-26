@@ -87,6 +87,11 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
+	public void saveCategory(CategoryEntity category) {
+		categoryRepository.save(category);
+	}
+
+	@Override
 	public ProductDTO getById(Long id) {
 
 		return convertToDTO(productRepository.findById(id)
@@ -194,6 +199,7 @@ public class ProductServiceImpl implements ProductService {
 					.description(productEntity.getDescription())
 					.rating(productEntity.getRating())
 					.price(productEntity.getPrice())
+					.amount(productEntity.getAmount())
 					.categoryName(category != null ? category.getName() : "")
 					.filePath(paths)
 					.build();
@@ -212,6 +218,7 @@ public class ProductServiceImpl implements ProductService {
 			.description(productEntity.getDescription())
 			.rating(productEntity.getRating())
 			.price(productEntity.getPrice())
+			.amount(productEntity.getAmount())
 			.categoryName(productEntity.getCategoryId().getName())
 			.build();
 	}

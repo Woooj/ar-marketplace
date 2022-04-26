@@ -23,6 +23,8 @@ public class CategoryEntity {
 	@Column(length = 50)
 	private String name;
 
+	private String icon;
+
 //	@OneToMany
 //	private Set<ProductEntity> products;
 

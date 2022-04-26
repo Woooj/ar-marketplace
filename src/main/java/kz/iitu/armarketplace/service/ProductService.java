@@ -20,4 +20,6 @@ public interface ProductService {
 	List<CategoryEntity> getAllCategories();
 
 	ProductsResponse search(String searchWord);
+
+	void saveCategory(CategoryEntity build);
 }

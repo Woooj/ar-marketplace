@@ -23,6 +23,8 @@ public class ProductToSave {
 
 	public Integer price;
 
+	public Integer amount;
+
 	public Integer category;
 
 	public List<MultipartFile> files;

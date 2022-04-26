@@ -29,6 +29,8 @@ public class ProductEntity {
 
 	private Integer price;
 
+	private Integer amount;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id")
 	private CategoryEntity categoryId;

@@ -1,6 +1,7 @@
 package kz.iitu.armarketplace.controller;
 
 import kz.iitu.armarketplace.entity.CategoryEntity;
+import kz.iitu.armarketplace.model.CategoryToSave;
 import kz.iitu.armarketplace.model.ProductDTO;
 import kz.iitu.armarketplace.model.ProductToSave;
 import kz.iitu.armarketplace.model.ProductsResponse;
@@ -62,6 +63,16 @@ public class ProductsController {
 	public List<CategoryEntity> getAllCategories() {
 
 		return productService.getAllCategories();
+	}
+
+
+	@PostMapping("/categories/save")
+	public void saveCategory(@RequestBody CategoryToSave category) {
+
+		productService.saveCategory(CategoryEntity.builder()
+			.name(category.getName())
+			.icon(category.getIcon())
+			.build());
 	}
 
 }
