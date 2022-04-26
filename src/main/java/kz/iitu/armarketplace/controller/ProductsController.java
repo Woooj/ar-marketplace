@@ -25,7 +25,7 @@ public class ProductsController {
 
 	@GetMapping("/all")
 	public ProductsResponse getAll(@RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
-																 @RequestParam(name = "pageSize", defaultValue = "16", required = false) Integer pageSize,
+																 @RequestParam(name = "pageSize", defaultValue = "12", required = false) Integer pageSize,
 																 @RequestParam(name = "category", required = false) String category,
 																 @RequestParam(name = "sort", required = false) String sort,
 																 @RequestParam(name = "sortType", required = false) String sortType) {

@@ -42,6 +42,7 @@ public class ProductServiceImpl implements ProductService {
 
 		List<ProductDTO> dtoList;
 		Pageable pageable;
+		int total;
 
 		if(sort == null || sort.equals("")) {
 			pageable = PageRequest.of(page, pageSize);
@@ -55,7 +56,8 @@ public class ProductServiceImpl implements ProductService {
 
 		if (isBlank(category)) {
 				dtoList = convertListToDTO(productRepository.findAll(pageable).getContent());
-				return new ProductsResponse(dtoList, dtoList.size());
+				total = (int) productRepository.count();
+				return new ProductsResponse(dtoList, total);
 			}
 
 			CategoryEntity categoryEntity = categoryRepository.findByName(category).orElse(new CategoryEntity());
@@ -64,7 +66,8 @@ public class ProductServiceImpl implements ProductService {
 				return new ProductsResponse(new ArrayList<>(), 0);
 			}
 			dtoList = convertListToDTO(productRepository.findAllByCategoryId(categoryEntity, pageable));
-			return new ProductsResponse(dtoList, dtoList.size());
+			total = (int) productRepository.countByCategory(categoryEntity.getId());
+			return new ProductsResponse(dtoList, total);
 
 	}
 
@@ -111,7 +114,7 @@ public class ProductServiceImpl implements ProductService {
 
 			String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
-			String uploadDir = "product-photos/" + productId;
+			String uploadDir = "classpath:static/images/" + productId;
 
 			try {
 				fileService.store(new FileToSave(fileName, productId));

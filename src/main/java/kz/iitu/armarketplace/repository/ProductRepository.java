@@ -34,4 +34,8 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 	Optional<ProductEntity> findById(@NonNull Long id);
 
 	Optional<List<ProductEntity>> findByCategoryId(@NonNull Integer category);
+
+
+	@Query(value = "SELECT count(1) FROM products p where p.category_id = ?1", nativeQuery = true)
+	long countByCategory(Integer categoryId);
 }
