@@ -1,6 +1,7 @@
 package kz.iitu.armarketplace.entity;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -35,6 +36,7 @@ public class ProductEntity {
 	@JoinColumn(name = "category_id")
 	private CategoryEntity categoryId;
 
+	@CreationTimestamp
 	private Date createdAt;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

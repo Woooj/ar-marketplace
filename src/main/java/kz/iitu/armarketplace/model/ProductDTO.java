@@ -3,6 +3,7 @@ package kz.iitu.armarketplace.model;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -22,6 +23,10 @@ public class ProductDTO {
 
 	public String categoryName;
 
+	public Date createdAt;
+
 	public List<String> filePath;
+
+	public List<CommentDTO> comments;
 
 }

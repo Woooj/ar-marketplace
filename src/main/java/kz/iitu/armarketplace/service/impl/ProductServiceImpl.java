@@ -3,12 +3,10 @@ package kz.iitu.armarketplace.service.impl;
 import kz.iitu.armarketplace.entity.CategoryEntity;
 import kz.iitu.armarketplace.entity.FileEntity;
 import kz.iitu.armarketplace.entity.ProductEntity;
-import kz.iitu.armarketplace.model.FileToSave;
-import kz.iitu.armarketplace.model.ProductDTO;
-import kz.iitu.armarketplace.model.ProductToSave;
-import kz.iitu.armarketplace.model.ProductsResponse;
+import kz.iitu.armarketplace.model.*;
 import kz.iitu.armarketplace.repository.CategoryRepository;
 import kz.iitu.armarketplace.repository.ProductRepository;
+import kz.iitu.armarketplace.service.CommentService;
 import kz.iitu.armarketplace.service.FileService;
 import kz.iitu.armarketplace.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +34,8 @@ public class ProductServiceImpl implements ProductService {
 	private final CategoryRepository categoryRepository;
 
 	private final FileService fileService;
+
+	private final CommentService commentService;
 
 	@Override
 	public ProductsResponse getAllProductsWithFilter(Integer page, Integer pageSize, String category, String sort, String sortType) {
@@ -94,8 +94,14 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public ProductDTO getById(Long id) {
 
-		return convertToDTO(productRepository.findById(id)
+		ProductDTO productDTO = convertToDTO(productRepository.findById(id)
 			.orElseThrow(() -> new RuntimeException("There is no product with id: " + id)));
+
+		List<CommentDTO> commentsForProduct = commentService.getByProductId(productDTO.getId());
+
+		productDTO.comments = commentsForProduct;
+
+		return productDTO;
 	}
 
 	@Override
@@ -200,6 +206,7 @@ public class ProductServiceImpl implements ProductService {
 					.rating(productEntity.getRating())
 					.price(productEntity.getPrice())
 					.amount(productEntity.getAmount())
+					.createdAt(productEntity.getCreatedAt())
 					.categoryName(category != null ? category.getName() : "")
 					.filePath(paths)
 					.build();
@@ -219,6 +226,7 @@ public class ProductServiceImpl implements ProductService {
 			.rating(productEntity.getRating())
 			.price(productEntity.getPrice())
 			.amount(productEntity.getAmount())
+			.createdAt(productEntity.getCreatedAt())
 			.categoryName(productEntity.getCategoryId().getName())
 			.build();
 	}
