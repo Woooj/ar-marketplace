@@ -28,7 +28,7 @@ public class FileEntity {
 	@Column(name = "type")
 	private String type;
 
-	@Column(name = "data", length = 100000)
+	@Column(name = "data", length = 100000, columnDefinition = "bytea")
 	private byte[] image;
 
 	@Column(name = "product_id")
