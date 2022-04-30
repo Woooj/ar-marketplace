@@ -25,7 +25,7 @@ public class ProductDTO {
 
 	public Date createdAt;
 
-	public List<String> filePath;
+	public List<String> images;
 
 	public List<CommentDTO> comments;
 

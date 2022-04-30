@@ -22,7 +22,14 @@ public class FileEntity {
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	private String id;
 
-	private String path;
+	@Column(name = "name")
+	private String name;
+
+	@Column(name = "type")
+	private String type;
+
+	@Column(name = "data", length = 100000)
+	private byte[] image;
 
 	@Column(name = "product_id")
 	private Long productId;

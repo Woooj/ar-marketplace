@@ -28,15 +28,18 @@ public class FileServiceImpl implements FileService {
 
 	private final ProductRepository productRepository;
 
-	@Transactional
-	public FileEntity store(FileToSave fileToSave) throws IOException {
 
+	public void store(FileToSave fileToSave) throws IOException {
 
-		FileEntity fileToDb = FileEntity.builder()
-			.productId(fileToSave.getProductId())
-			.path(fileToSave.getProductId() + "/" + fileToSave.getName())
-			.build();
-		return fileRepository.save(fileToDb);
+		for (MultipartFile image : fileToSave.getImages())	{
+				FileEntity fileToDb = FileEntity.builder()
+					.name(image.getOriginalFilename())
+					.type(image.getContentType())
+					.productId(fileToSave.getProductId())
+					.image(image.getBytes())
+					.build();
+				fileRepository.save(fileToDb);
+			}
 	}
 
 	public FileEntity getFile(String id) {
@@ -48,20 +51,25 @@ public class FileServiceImpl implements FileService {
 
 		return fileRepository.findAll().stream();
 	}
+
 	public void saveFile(String uploadDir, String fileName,
-															MultipartFile multipartFile) throws IOException {
-		Path uploadPath = Paths.get(uploadDir);
+											 MultipartFile multipartFile) throws IOException {
 
-		if (!Files.exists(uploadPath)) {
-			Files.createDirectories(uploadPath);
-		}
-
-		try (InputStream inputStream = multipartFile.getInputStream()) {
-			Path filePath = uploadPath.resolve(fileName);
-			Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException ioe) {
-			throw new IOException("Could not save image file: " + fileName, ioe);
-		}
+//		Path uploadPath = Paths.get(uploadDir);
+//
+//		if(!Files.exists(uploadPath))
+//			{
+//				Files.createDirectories(uploadPath);
+//			}
+//
+//		try(InputStream inputStream = multipartFile.getInputStream())
+//			{
+//				Path filePath = uploadPath.resolve(fileName);
+//				Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+//			} catch(IOException ioe)
+//			{
+//				throw new IOException("Could not save image file: " + fileName, ioe);
+//			}
 	}
 
 	@Override

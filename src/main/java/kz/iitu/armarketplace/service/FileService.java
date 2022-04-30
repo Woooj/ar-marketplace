@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 public interface FileService {
 
-	FileEntity store(FileToSave fileToSave) throws IOException;
+	void store(FileToSave fileToSave) throws IOException;
 
 	FileEntity getFile(String id);
 

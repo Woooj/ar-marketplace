@@ -47,7 +47,7 @@ public class ProductEntity {
 	public String getImagesPath() {
 		if (imgProducts == null || id == null) return null;
 
-		return "/product-photos/" + id + "/";
+		return "/images/" + id + "/";
 	}
 
 }

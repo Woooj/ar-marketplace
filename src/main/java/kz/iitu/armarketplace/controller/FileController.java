@@ -4,16 +4,23 @@ import kz.iitu.armarketplace.entity.FileEntity;
 import kz.iitu.armarketplace.model.FileToSave;
 import kz.iitu.armarketplace.payload.response.MessageResponse;
 import kz.iitu.armarketplace.payload.response.ResponseFile;
+import kz.iitu.armarketplace.repository.FileRepository;
 import kz.iitu.armarketplace.service.FileService;
+import kz.iitu.armarketplace.util.ImageUtility;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -21,13 +28,53 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/files")
 public class FileController {
 
-	private final FileService fileService;
+//	private final FileService fileService;
 
+	private final FileRepository fileRepository;
 
 	@GetMapping("/check")
 	public void checkFile(@RequestParam("id") long id) {
-		File f = new File("/product-photos/16/iracor_paint.jpg");
+
+		File f = new File("/images/16/iracor_paint.jpg");
 		System.out.println("asd " + f.isFile() + f.exists() + " " + f.getAbsolutePath());
+	}
+
+	@PostMapping("/upload/image")
+	public ResponseEntity<String> uplaodImage(@RequestParam("image") MultipartFile file,
+																						@RequestParam("productId") Long productId)
+		throws IOException {
+
+		fileRepository.save(FileEntity.builder()
+			.name(file.getOriginalFilename())
+			.type(file.getContentType())
+			.productId(productId)
+			.image(file.getBytes())
+			.build());
+		return ResponseEntity.status(HttpStatus.OK)
+			.body("Image uploaded successfully: " +
+				file.getOriginalFilename());
+	}
+
+	@GetMapping(path = {"/get/image/info/{name}"})
+	public FileEntity getImageDetails(@PathVariable("name") String name) throws IOException {
+
+		final Optional<FileEntity> dbImage = fileRepository.findByName(name);
+
+		return FileEntity.builder()
+			.name(dbImage.get().getName())
+			.type(dbImage.get().getType())
+			.image(ImageUtility.decompressImage(dbImage.get().getImage())).build();
+	}
+
+	@GetMapping(path = {"/get/image/{name}"})
+	public ResponseEntity<byte[]> getImage(@PathVariable("name") String name) throws IOException {
+
+		final Optional<FileEntity> dbImage = fileRepository.findByName(name);
+
+		return ResponseEntity
+			.ok()
+			.contentType(MediaType.valueOf(dbImage.get().getType()))
+			.body(dbImage.get().getImage());
 	}
 
 

@@ -125,11 +125,9 @@ public class ProductServiceImpl implements ProductService {
 
 			String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
-			String uploadDir = "classpath:static/images/" + productId;
-
 			try {
-				fileService.store(new FileToSave(fileName, productId));
-				fileService.saveFile(uploadDir, fileName, file);
+				fileService.store(new FileToSave(fileName, productId, product.files));
+//				fileService.saveFile(uploadDir, fileName, file);
 			} catch (IOException ignored) {
 				System.out.println("error " + ignored.getMessage());
 			}
@@ -196,9 +194,9 @@ public class ProductServiceImpl implements ProductService {
 		for(ProductEntity productEntity : all)
 			{
 				CategoryEntity category = productEntity.getCategoryId();
-				List<String> paths = new ArrayList<>();
+				List<String> images = new ArrayList<>();
 				List<FileEntity> mediaFiles = fileService.getAllFilesByProduct(productEntity.getId());
-				mediaFiles.forEach(i -> paths.add(i.getPath()));
+				mediaFiles.forEach(i -> images.add(i.getName()));
 				ProductDTO dto = ProductDTO.builder()
 					.id(productEntity.getId())
 					.name(productEntity.getName())
@@ -208,7 +206,7 @@ public class ProductServiceImpl implements ProductService {
 					.amount(productEntity.getAmount())
 					.createdAt(productEntity.getCreatedAt())
 					.categoryName(category != null ? category.getName() : "")
-					.filePath(paths)
+					.images(images)
 					.build();
 
 				dtoList.add(dto);
@@ -219,6 +217,10 @@ public class ProductServiceImpl implements ProductService {
 
 	private ProductDTO convertToDTO(ProductEntity productEntity) {
 
+		List<String> images = new ArrayList<>();
+		List<FileEntity> mediaFiles = fileService.getAllFilesByProduct(productEntity.getId());
+		mediaFiles.forEach(i -> images.add(i.getName()));
+
 		return ProductDTO.builder()
 			.id(productEntity.getId())
 			.name(productEntity.getName())
@@ -228,6 +230,7 @@ public class ProductServiceImpl implements ProductService {
 			.amount(productEntity.getAmount())
 			.createdAt(productEntity.getCreatedAt())
 			.categoryName(productEntity.getCategoryId().getName())
+			.images(images)
 			.build();
 	}
 
