@@ -32,13 +32,6 @@ public class FileController {
 
 	private final FileRepository fileRepository;
 
-	@GetMapping("/check")
-	public void checkFile(@RequestParam("id") long id) {
-
-		File f = new File("/images/16/iracor_paint.jpg");
-		System.out.println("asd " + f.isFile() + f.exists() + " " + f.getAbsolutePath());
-	}
-
 	@PostMapping("/upload/image")
 	public ResponseEntity<String> uplaodImage(@RequestParam("image") MultipartFile file,
 																						@RequestParam("productId") Long productId)
@@ -66,7 +59,7 @@ public class FileController {
 			.image(ImageUtility.decompressImage(dbImage.get().getImage())).build();
 	}
 
-	@GetMapping(path = {"/get/image/{name}"})
+	@GetMapping(path = {"/get/{name}"})
 	public ResponseEntity<byte[]> getImage(@PathVariable("name") String name) throws IOException {
 
 		final Optional<FileEntity> dbImage = fileRepository.findByName(name);
@@ -74,7 +67,18 @@ public class FileController {
 		return ResponseEntity
 			.ok()
 			.contentType(MediaType.valueOf(dbImage.get().getType()))
-			.body(dbImage.get().getImage());
+			.body(ImageUtility.decompressImage(dbImage.get().getImage()));
+	}
+
+	@GetMapping(path = {"/get-compressed/{name}"})
+	public ResponseEntity<byte[]> getCompressedImage(@PathVariable("name") String name) throws IOException {
+
+		final Optional<FileEntity> dbImage = fileRepository.findByName(name);
+
+		return ResponseEntity
+			.ok()
+			.contentType(MediaType.valueOf(dbImage.get().getType()))
+			.body(ImageUtility.compressImage(dbImage.get().getImage()));
 	}
 
 

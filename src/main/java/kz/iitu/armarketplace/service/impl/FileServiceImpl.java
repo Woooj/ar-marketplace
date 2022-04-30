@@ -5,6 +5,7 @@ import kz.iitu.armarketplace.model.FileToSave;
 import kz.iitu.armarketplace.repository.FileRepository;
 import kz.iitu.armarketplace.repository.ProductRepository;
 import kz.iitu.armarketplace.service.FileService;
+import kz.iitu.armarketplace.util.ImageUtility;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -36,7 +37,7 @@ public class FileServiceImpl implements FileService {
 					.name(image.getOriginalFilename())
 					.type(image.getContentType())
 					.productId(fileToSave.getProductId())
-					.image(image.getBytes())
+					.image(ImageUtility.compressImage(image.getBytes()))
 					.build();
 				fileRepository.save(fileToDb);
 			}
