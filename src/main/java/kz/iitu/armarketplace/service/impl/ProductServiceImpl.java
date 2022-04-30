@@ -121,18 +121,15 @@ public class ProductServiceImpl implements ProductService {
 
 		Long productId = saved.getId();
 
-		for (MultipartFile file : product.getFiles()) {
 
-			String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+		String fileName = "asd";
 
-			try {
-				fileService.store(new FileToSave(fileName, productId, product.files));
-//				fileService.saveFile(uploadDir, fileName, file);
-			} catch (IOException ignored) {
-				System.out.println("error " + ignored.getMessage());
-			}
-
+		try {
+			fileService.store(new FileToSave(fileName, productId, product.files));
+		} catch (IOException ignored) {
+			System.out.println("error " + ignored.getMessage());
 		}
+
 
 
 		return convertToDTO(saved);
