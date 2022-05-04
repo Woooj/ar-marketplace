@@ -22,6 +22,7 @@ public class CommentEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(columnDefinition = "text")
 	private String text;
 
 	private Double rating;
