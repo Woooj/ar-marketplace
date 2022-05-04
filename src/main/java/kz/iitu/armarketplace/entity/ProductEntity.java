@@ -30,6 +30,7 @@ public class ProductEntity {
 
 	private Integer price;
 
+	@Column(columnDefinition = "integer default 1")
 	private Integer amount;
 
 	@ManyToOne(fetch = FetchType.LAZY)
