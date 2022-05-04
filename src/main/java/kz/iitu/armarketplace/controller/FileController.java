@@ -1,27 +1,25 @@
 package kz.iitu.armarketplace.controller;
 
 import kz.iitu.armarketplace.entity.FileEntity;
-import kz.iitu.armarketplace.model.FileToSave;
-import kz.iitu.armarketplace.payload.response.MessageResponse;
-import kz.iitu.armarketplace.payload.response.ResponseFile;
 import kz.iitu.armarketplace.repository.FileRepository;
-import kz.iitu.armarketplace.service.FileService;
 import kz.iitu.armarketplace.util.ImageUtility;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
+import net.coobird.thumbnailator.Thumbnails;
+import org.apache.commons.io.FileUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.awt.*;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
+import java.nio.file.Files;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -75,10 +73,27 @@ public class FileController {
 
 		final Optional<FileEntity> dbImage = fileRepository.findByName(name);
 
+		File file = new File(dbImage.get().getName());
+
+//		ByteArrayInputStream bais = new ByteArrayInputStream(ImageUtility.decompressImage(dbImage.get().getImage()));
+//		BufferedImage read = ImageIO.read(bais);
+
+		FileUtils.writeByteArrayToFile(file, ImageUtility.decompressImage(dbImage.get().getImage()));
+
+//		Files.write(file.toPath(), dbImage.get().getImage());
+
+//		try (FileOutputStream outputStream = new FileOutputStream(file)) {
+//			outputStream.write(dbImage.get().getImage());
+//		}
+
+		Thumbnails.of(file)
+			.size(120, 120)
+			.toFile(file);
+
 		return ResponseEntity
 			.ok()
 			.contentType(MediaType.valueOf(dbImage.get().getType()))
-			.body(ImageUtility.compressImage(dbImage.get().getImage()));
+			.body(FileUtils.readFileToByteArray(file));
 	}
 
 
