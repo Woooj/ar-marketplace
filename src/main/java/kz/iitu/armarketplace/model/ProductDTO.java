@@ -27,6 +27,8 @@ public class ProductDTO {
 
 	public List<String> images;
 
+	public String thumbnail;
+
 	public List<CommentDTO> comments;
 
 }

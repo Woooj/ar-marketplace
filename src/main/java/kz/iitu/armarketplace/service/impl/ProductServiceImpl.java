@@ -194,6 +194,7 @@ public class ProductServiceImpl implements ProductService {
 				List<String> images = new ArrayList<>();
 				List<FileEntity> mediaFiles = fileService.getAllFilesByProduct(productEntity.getId());
 				mediaFiles.forEach(i -> images.add(i.getName()));
+				String thumbnail = images.size() > 0 ? images.get(0) : "";
 				ProductDTO dto = ProductDTO.builder()
 					.id(productEntity.getId())
 					.name(productEntity.getName())
@@ -204,6 +205,7 @@ public class ProductServiceImpl implements ProductService {
 					.createdAt(productEntity.getCreatedAt())
 					.categoryName(category != null ? category.getName() : "")
 					.images(images)
+					.thumbnail(thumbnail)
 					.build();
 
 				dtoList.add(dto);
@@ -217,6 +219,7 @@ public class ProductServiceImpl implements ProductService {
 		List<String> images = new ArrayList<>();
 		List<FileEntity> mediaFiles = fileService.getAllFilesByProduct(productEntity.getId());
 		mediaFiles.forEach(i -> images.add(i.getName()));
+		String thumbnail = images.size() > 0 ? images.get(0) : "";
 
 		return ProductDTO.builder()
 			.id(productEntity.getId())
@@ -228,6 +231,7 @@ public class ProductServiceImpl implements ProductService {
 			.createdAt(productEntity.getCreatedAt())
 			.categoryName(productEntity.getCategoryId().getName())
 			.images(images)
+			.thumbnail(thumbnail)
 			.build();
 	}
 
