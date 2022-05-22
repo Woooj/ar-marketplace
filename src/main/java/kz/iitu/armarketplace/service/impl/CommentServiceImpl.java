@@ -1,7 +1,7 @@
 package kz.iitu.armarketplace.service.impl;
 
-import kz.iitu.armarketplace.entity.CommentEntity;
-import kz.iitu.armarketplace.entity.ProductEntity;
+import kz.iitu.armarketplace.entity.Comment;
+import kz.iitu.armarketplace.entity.Product;
 import kz.iitu.armarketplace.model.CommentDTO;
 import kz.iitu.armarketplace.model.CommentToSave;
 import kz.iitu.armarketplace.repository.CommentRepository;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +44,7 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public CommentDTO getById(Long id) {
 
-		CommentEntity commentEntity = commentRepository.findById(id).get();
+		Comment commentEntity = commentRepository.findById(id).get();
 
 		return CommentDTO.builder()
 			.id(commentEntity.getId())
@@ -58,11 +57,11 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 
-	private List<CommentDTO> convertToDTO(List<CommentEntity> all) {
+	private List<CommentDTO> convertToDTO(List<Comment> all) {
 
 		List<CommentDTO> result = new ArrayList<>();
 
-		for (CommentEntity comment : all) {
+		for (Comment comment : all) {
 			result.add(CommentDTO.builder()
 					.id(comment.getId())
 					.text(comment.getText())
@@ -76,10 +75,10 @@ public class CommentServiceImpl implements CommentService {
 		return result;
 	}
 
-	private CommentEntity convertToEntity(CommentToSave commentToSave) {
+	private Comment convertToEntity(CommentToSave commentToSave) {
 
-		ProductEntity product = productRepository.findById(commentToSave.productId).get();
-		return CommentEntity.builder()
+		Product product = productRepository.findById(commentToSave.productId).get();
+		return Comment.builder()
 			.id(commentToSave.id)
 			.rating(commentToSave.rating)
 			.username(commentToSave.username)

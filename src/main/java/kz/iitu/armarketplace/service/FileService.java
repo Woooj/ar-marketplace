@@ -1,6 +1,6 @@
 package kz.iitu.armarketplace.service;
 
-import kz.iitu.armarketplace.entity.FileEntity;
+import kz.iitu.armarketplace.entity.File;
 import kz.iitu.armarketplace.model.FileToSave;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,11 +12,9 @@ public interface FileService {
 
 	void store(FileToSave fileToSave) throws IOException;
 
-	FileEntity getFile(String id);
+	File getFile(String id);
 
-	Stream<FileEntity> getAllFiles();
+	Stream<File> getAllFiles();
 
-	void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException;
-
-	List<FileEntity> getAllFilesByProduct(Long id);
+	List<File> getAllFilesByProduct(Long id);
 }

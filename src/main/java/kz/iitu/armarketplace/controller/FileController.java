@@ -1,6 +1,6 @@
 package kz.iitu.armarketplace.controller;
 
-import kz.iitu.armarketplace.entity.FileEntity;
+import kz.iitu.armarketplace.entity.File;
 import kz.iitu.armarketplace.repository.FileRepository;
 import kz.iitu.armarketplace.util.ImageUtility;
 import lombok.RequiredArgsConstructor;
@@ -12,13 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -35,23 +29,23 @@ public class FileController {
 																						@RequestParam("productId") Long productId)
 		throws IOException {
 
-		fileRepository.save(FileEntity.builder()
-			.name(file.getOriginalFilename())
-			.type(file.getContentType())
-			.productId(productId)
-			.image(file.getBytes())
-			.build());
+//		fileRepository.save(File.builder()
+//			.name(file.getOriginalFilename())
+//			.type(file.getContentType())
+//			.productId(productId)
+//			.image(file.getBytes())
+//			.build());
 		return ResponseEntity.status(HttpStatus.OK)
 			.body("Image uploaded successfully: " +
 				file.getOriginalFilename());
 	}
 
 	@GetMapping(path = {"/get/image/info/{name}"})
-	public FileEntity getImageDetails(@PathVariable("name") String name) throws IOException {
+	public File getImageDetails(@PathVariable("name") String name) throws IOException {
 
-		final Optional<FileEntity> dbImage = fileRepository.findByName(name);
+		final Optional<File> dbImage = fileRepository.findByName(name);
 
-		return FileEntity.builder()
+		return File.builder()
 			.name(dbImage.get().getName())
 			.type(dbImage.get().getType())
 			.image(ImageUtility.decompressImage(dbImage.get().getImage())).build();
@@ -60,7 +54,7 @@ public class FileController {
 	@GetMapping(path = {"/get/{name}"})
 	public ResponseEntity<byte[]> getImage(@PathVariable("name") String name) throws IOException {
 
-		final Optional<FileEntity> dbImage = fileRepository.findByName(name);
+		final Optional<File> dbImage = fileRepository.findByName(name);
 
 		return ResponseEntity
 			.ok()
@@ -71,9 +65,9 @@ public class FileController {
 	@GetMapping(path = {"/get-compressed/{name}"})
 	public ResponseEntity<byte[]> getCompressedImage(@PathVariable("name") String name) throws IOException {
 
-		final Optional<FileEntity> dbImage = fileRepository.findByName(name);
+		final Optional<File> dbImage = fileRepository.findByName(name);
 
-		File file = new File(dbImage.get().getName());
+		java.io.File file = new java.io.File(dbImage.get().getName());
 
 //		ByteArrayInputStream bais = new ByteArrayInputStream(ImageUtility.decompressImage(dbImage.get().getImage()));
 //		BufferedImage read = ImageIO.read(bais);

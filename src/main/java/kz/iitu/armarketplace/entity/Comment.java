@@ -14,9 +14,9 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "comments")
 @Entity
-public class CommentEntity {
+@Table(name = "comments")
+public class Comment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,8 +32,11 @@ public class CommentEntity {
 	@CreationTimestamp
 	private Date createdAt;
 
+	@CreationTimestamp
+	private Date modifiedAt;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id")
-	private ProductEntity product;
+	private Product product;
 
 }

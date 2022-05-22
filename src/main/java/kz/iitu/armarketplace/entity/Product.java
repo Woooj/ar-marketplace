@@ -5,10 +5,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Builder
@@ -16,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name = "products")
 @Entity
-public class ProductEntity {
+public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,20 +33,19 @@ public class ProductEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id")
-	private CategoryEntity categoryId;
+	private Category category;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "discount_id")
+	private Discount discount;
 
 	@CreationTimestamp
 	private Date createdAt;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(referencedColumnName = "id")
-	private List<FileEntity> imgProducts = new ArrayList<>();
+	@OneToMany(mappedBy = "product")
+	private List<File> imgProducts;
 
-	@Transient
-	public String getImagesPath() {
-		if (imgProducts == null || id == null) return null;
-
-		return "/images/" + id + "/";
-	}
+	@OneToMany(mappedBy = "product")
+	private List<Comment> comments;
 
 }

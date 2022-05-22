@@ -1,6 +1,6 @@
 package kz.iitu.armarketplace.service.security;
 
-import kz.iitu.armarketplace.entity.UserEntity;
+import kz.iitu.armarketplace.entity.User;
 import kz.iitu.armarketplace.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +17,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserEntity user = userRepository.findByUsername(username)
+		User user = userRepository.findByUsername(username)
 			.orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
 		return UserDetailsImpl.build(user);

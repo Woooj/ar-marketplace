@@ -1,8 +1,8 @@
 package kz.iitu.armarketplace.service.impl;
 
-import kz.iitu.armarketplace.entity.CategoryEntity;
-import kz.iitu.armarketplace.entity.FileEntity;
-import kz.iitu.armarketplace.entity.ProductEntity;
+import kz.iitu.armarketplace.entity.Category;
+import kz.iitu.armarketplace.entity.File;
+import kz.iitu.armarketplace.entity.Product;
 import kz.iitu.armarketplace.model.*;
 import kz.iitu.armarketplace.repository.CategoryRepository;
 import kz.iitu.armarketplace.repository.ProductRepository;
@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
@@ -23,7 +22,6 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import static org.apache.logging.log4j.util.Strings.isBlank;
-import static org.apache.logging.log4j.util.Strings.isNotBlank;
 
 @Service
 @RequiredArgsConstructor
@@ -60,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
 				return new ProductsResponse(dtoList, total);
 			}
 
-			CategoryEntity categoryEntity = categoryRepository.findByName(category).orElse(new CategoryEntity());
+			Category categoryEntity = categoryRepository.findByName(category).orElse(new Category());
 
 			if (Objects.isNull(categoryEntity.getId())) {
 				return new ProductsResponse(new ArrayList<>(), 0);
@@ -78,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
 			throw new RuntimeException("Empty search data");
 		}
 
-		List<ProductEntity> productsBySearchWord = productRepository.getProductsBySearchWord(searchWord.trim());
+		List<Product> productsBySearchWord = productRepository.getProductsBySearchWord(searchWord.trim());
 
 		return ProductsResponse.builder()
 			.list(convertListToDTO(productsBySearchWord))
@@ -87,7 +85,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public void saveCategory(CategoryEntity category) {
+	public void saveCategory(Category category) {
 		categoryRepository.save(category);
 	}
 
@@ -117,7 +115,7 @@ public class ProductServiceImpl implements ProductService {
 
 		validateProduct(product);
 
-		ProductEntity saved = productRepository.save(saveToEntity(product));
+		Product saved = productRepository.save(saveToEntity(product));
 
 		Long productId = saved.getId();
 
@@ -135,22 +133,21 @@ public class ProductServiceImpl implements ProductService {
 		return convertToDTO(saved);
 	}
 
-	private ProductEntity saveToEntity(ProductToSave product) {
+	private Product saveToEntity(ProductToSave product) {
 
-		List<String> paths = new ArrayList<>();
+//		List<String> paths = new ArrayList<>();
 
-		for (MultipartFile file : product.files) {
-			paths.add(product.id + "/" + file.getOriginalFilename());
-		}
+//		for (MultipartFile file : product.files) {
+//			paths.add(product.id + "/" + file.getOriginalFilename());
+//		}
 
-		return ProductEntity.builder()
+		return Product.builder()
 			.id(product.id)
 			.name(product.name)
 			.description(product.description)
-			.categoryId(categoryRepository.findById(product.category).orElseThrow(() -> new RuntimeException("No such category")))
+			.category(categoryRepository.findById(product.category).orElseThrow(() -> new RuntimeException("No such category")))
 			.rating(BigDecimal.ZERO)
 			.price(product.price)
-//			.imgProducts(paths)
 			.createdAt(new Date())
 			.build();
 	}
@@ -180,19 +177,19 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<CategoryEntity> getAllCategories() {
+	public List<Category> getAllCategories() {
 
 		return categoryRepository.findAll();
 	}
 
-	private List<ProductDTO> convertListToDTO(List<ProductEntity> all) {
+	private List<ProductDTO> convertListToDTO(List<Product> all) {
 
 		List<ProductDTO> dtoList = new ArrayList<>();
-		for(ProductEntity productEntity : all)
+		for(Product productEntity : all)
 			{
-				CategoryEntity category = productEntity.getCategoryId();
+				Category category = productEntity.getCategory();
 				List<String> images = new ArrayList<>();
-				List<FileEntity> mediaFiles = fileService.getAllFilesByProduct(productEntity.getId());
+				List<File> mediaFiles = fileService.getAllFilesByProduct(productEntity.getId());
 				mediaFiles.forEach(i -> images.add(i.getName()));
 				String thumbnail = images.size() > 0 ? images.get(0) : "";
 				ProductDTO dto = ProductDTO.builder()
@@ -214,10 +211,10 @@ public class ProductServiceImpl implements ProductService {
 		return dtoList;
 	}
 
-	private ProductDTO convertToDTO(ProductEntity productEntity) {
+	private ProductDTO convertToDTO(Product productEntity) {
 
 		List<String> images = new ArrayList<>();
-		List<FileEntity> mediaFiles = fileService.getAllFilesByProduct(productEntity.getId());
+		List<File> mediaFiles = fileService.getAllFilesByProduct(productEntity.getId());
 		mediaFiles.forEach(i -> images.add(i.getName()));
 		String thumbnail = images.size() > 0 ? images.get(0) : "";
 
@@ -229,7 +226,7 @@ public class ProductServiceImpl implements ProductService {
 			.price(productEntity.getPrice())
 			.amount(productEntity.getAmount())
 			.createdAt(productEntity.getCreatedAt())
-			.categoryName(productEntity.getCategoryId().getName())
+			.categoryName(productEntity.getCategory().getName())
 			.images(images)
 			.thumbnail(thumbnail)
 			.build();

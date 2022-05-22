@@ -1,7 +1,7 @@
 package kz.iitu.armarketplace.controller;
 
-import kz.iitu.armarketplace.entity.RoleEntity;
-import kz.iitu.armarketplace.entity.UserEntity;
+import kz.iitu.armarketplace.entity.Role;
+import kz.iitu.armarketplace.entity.User;
 import kz.iitu.armarketplace.enums.RoleEnum;
 import kz.iitu.armarketplace.payload.request.LoginRequest;
 import kz.iitu.armarketplace.payload.request.SignupRequest;
@@ -12,7 +12,6 @@ import kz.iitu.armarketplace.repository.UserRepository;
 import kz.iitu.armarketplace.security.jwt.JwtUtils;
 import kz.iitu.armarketplace.service.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -78,34 +77,34 @@ public class AuthController {
 		}
 
 		// Create new user's account
-		UserEntity user = new UserEntity(signUpRequest.getUsername(),
+		User user = new User(signUpRequest.getUsername(),
 			signUpRequest.getEmail(),
 			encoder.encode(signUpRequest.getPassword()));
 
 		Set<String> strRoles = signUpRequest.getRole();
-		Set<RoleEntity> roles = new HashSet<>();
+		Set<Role> roles = new HashSet<>();
 
 		if (strRoles == null) {
-			RoleEntity userRole = roleRepository.findByName(RoleEnum.ROLE_USER)
+			Role userRole = roleRepository.findByName(RoleEnum.ROLE_USER)
 				.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 			roles.add(userRole);
 		} else {
 			strRoles.forEach(role -> {
 				switch (role) {
 					case "admin":
-						RoleEntity adminRole = roleRepository.findByName(RoleEnum.ROLE_ADMIN)
+						Role adminRole = roleRepository.findByName(RoleEnum.ROLE_ADMIN)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 						roles.add(adminRole);
 
 						break;
 					case "mod":
-						RoleEntity modRole = roleRepository.findByName(RoleEnum.ROLE_MODERATOR)
+						Role modRole = roleRepository.findByName(RoleEnum.ROLE_MODERATOR)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 						roles.add(modRole);
 
 						break;
 					default:
-						RoleEntity userRole = roleRepository.findByName(RoleEnum.ROLE_USER)
+						Role userRole = roleRepository.findByName(RoleEnum.ROLE_USER)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 						roles.add(userRole);
 				}

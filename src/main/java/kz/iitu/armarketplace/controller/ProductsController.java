@@ -1,6 +1,6 @@
 package kz.iitu.armarketplace.controller;
 
-import kz.iitu.armarketplace.entity.CategoryEntity;
+import kz.iitu.armarketplace.entity.Category;
 import kz.iitu.armarketplace.model.CategoryToSave;
 import kz.iitu.armarketplace.model.ProductDTO;
 import kz.iitu.armarketplace.model.ProductToSave;
@@ -8,7 +8,6 @@ import kz.iitu.armarketplace.model.ProductsResponse;
 import kz.iitu.armarketplace.service.FileService;
 import kz.iitu.armarketplace.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +20,6 @@ import java.util.List;
 public class ProductsController {
 
 	private final ProductService productService;
-
-	private final FileService fileService;
 
 	@GetMapping("/all")
 	public ProductsResponse getAll(@RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
@@ -60,7 +57,7 @@ public class ProductsController {
 
 
 	@GetMapping("/categories/all")
-	public List<CategoryEntity> getAllCategories() {
+	public List<Category> getAllCategories() {
 
 		return productService.getAllCategories();
 	}
@@ -69,7 +66,7 @@ public class ProductsController {
 	@PostMapping("/categories/save")
 	public void saveCategory(@RequestBody CategoryToSave category) {
 
-		productService.saveCategory(CategoryEntity.builder()
+		productService.saveCategory(Category.builder()
 			.name(category.getName())
 			.icon(category.getIcon())
 			.build());

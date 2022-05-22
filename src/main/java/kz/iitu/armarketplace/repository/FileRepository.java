@@ -1,6 +1,6 @@
 package kz.iitu.armarketplace.repository;
 
-import kz.iitu.armarketplace.entity.FileEntity;
+import kz.iitu.armarketplace.entity.File;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface FileRepository extends JpaRepository<FileEntity, String> {
+public interface FileRepository extends JpaRepository<File, String> {
 
-	List<FileEntity> findAllByProductId(Long id);
+	List<File> findAllByProductId(Long id);
 
-	Optional<FileEntity> findByName(String name);
+	Optional<File> findByName(String name);
 }

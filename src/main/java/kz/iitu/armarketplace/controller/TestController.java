@@ -1,9 +1,7 @@
 package kz.iitu.armarketplace.controller;
 
-import kz.iitu.armarketplace.entity.CategoryEntity;
-import kz.iitu.armarketplace.entity.ProductEntity;
-import kz.iitu.armarketplace.entity.RoleEntity;
-import kz.iitu.armarketplace.enums.RoleEnum;
+import kz.iitu.armarketplace.entity.Category;
+import kz.iitu.armarketplace.entity.Product;
 import kz.iitu.armarketplace.model.ProductDTO;
 import kz.iitu.armarketplace.repository.CategoryRepository;
 import kz.iitu.armarketplace.repository.ProductRepository;
@@ -12,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.Date;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -33,21 +30,21 @@ public class TestController {
 	@PostMapping("/save-product")
 	public void saveProduct(@RequestBody ProductDTO product) {
 
-		productRepository.save(ProductEntity.builder()
+		productRepository.save(Product.builder()
 				.name(product.name)
 				.description(product.description)
 				.rating(product.rating)
 				.price(product.price)
 				.amount(product.amount)
 				.createdAt(new Date())
-				.categoryId(categoryRepository.findByName(product.categoryName).orElseThrow(() -> new RuntimeException("There is no such category")))
+//				.categoryId(categoryRepository.findByName(product.categoryName).orElseThrow(() -> new RuntimeException("There is no such category")))
 				.build());
 	}
 
 	@PostMapping("/save-category")
 	public void saveCategory(@RequestBody String categoryName) {
 
-		categoryRepository.save(CategoryEntity.builder()
+		categoryRepository.save(Category.builder()
 				.name(categoryName)
 				.build());
 	}

@@ -1,6 +1,6 @@
 package kz.iitu.armarketplace.repository;
 
-import kz.iitu.armarketplace.entity.CommentEntity;
+import kz.iitu.armarketplace.entity.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
+public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-	List<CommentEntity> findAllByProductId(@NonNull Long productId);
+	List<Comment> findAllByProductId(@NonNull Long productId);
 
 }

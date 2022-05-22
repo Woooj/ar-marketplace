@@ -1,6 +1,6 @@
 package kz.iitu.armarketplace.service;
 
-import kz.iitu.armarketplace.entity.CategoryEntity;
+import kz.iitu.armarketplace.entity.Category;
 import kz.iitu.armarketplace.model.ProductDTO;
 import kz.iitu.armarketplace.model.ProductToSave;
 import kz.iitu.armarketplace.model.ProductsResponse;
@@ -17,9 +17,9 @@ public interface ProductService {
 
 	ProductDTO saveProduct(ProductToSave product);
 
-	List<CategoryEntity> getAllCategories();
+	List<Category> getAllCategories();
 
 	ProductsResponse search(String searchWord);
 
-	void saveCategory(CategoryEntity build);
+	void saveCategory(Category build);
 }

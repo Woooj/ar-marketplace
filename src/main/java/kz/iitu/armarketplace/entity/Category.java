@@ -6,15 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table
-public class CategoryEntity {
+@Table(name = "categories")
+public class Category {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,5 @@ public class CategoryEntity {
 
 	private String icon;
 
-//	@OneToMany
-//	private Set<ProductEntity> products;
 
 }

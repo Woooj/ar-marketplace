@@ -1,7 +1,7 @@
 package kz.iitu.armarketplace.repository;
 
-import kz.iitu.armarketplace.entity.CategoryEntity;
-import kz.iitu.armarketplace.entity.ProductEntity;
+import kz.iitu.armarketplace.entity.Category;
+import kz.iitu.armarketplace.entity.Product;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
 
 	@Query(value = "SELECT nextval('products_id_seq')", nativeQuery =
@@ -23,17 +23,15 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
 	@Query(value = "SELECT * FROM products p WHERE p.name LIKE CONCAT('%', :keyWord, '%') OR p.description LIKE CONCAT('%', :keyWord, '%') order by created_at", nativeQuery =
 		true)
-	List<ProductEntity> getProductsBySearchWord(@Param("keyWord") String keyWord);
+	List<Product> getProductsBySearchWord(@Param("keyWord") String keyWord);
 
-	List<ProductEntity> findAllByCategoryIdAndRatingAndPrice(@NonNull CategoryEntity category,
-																													 @NonNull BigDecimal rating,
-																													 @NonNull Integer price);
+	List<Product> findAllByCategoryIdAndRatingAndPrice(@NonNull Category category, @NonNull BigDecimal rating, @NonNull Integer price);
 
-	List<ProductEntity> findAllByCategoryId(@NonNull CategoryEntity category, Pageable pageable);
+	List<Product> findAllByCategoryId(@NonNull Category category, Pageable pageable);
 
-	Optional<ProductEntity> findById(@NonNull Long id);
+	Optional<Product> findById(@NonNull Long id);
 
-	Optional<List<ProductEntity>> findByCategoryId(@NonNull Integer category);
+	Optional<List<Product>> findByCategoryId(@NonNull Integer category);
 
 
 	@Query(value = "SELECT count(1) FROM products p where p.category_id = ?1", nativeQuery = true)

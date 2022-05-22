@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.sql.Timestamp;
 
 @Data
 @Builder
@@ -15,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "files")
-public class FileEntity {
+public class File {
 
 	@Id
 	@GeneratedValue(generator = "uuid")
@@ -31,6 +31,14 @@ public class FileEntity {
 	@Column(name = "data", length = 100000, columnDefinition = "bytea")
 	private byte[] image;
 
-	@Column(name = "product_id")
-	private Long productId;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "product_id")
+	private Product product;
+
+	@Column(name = "created_at", columnDefinition = "timestamp")
+	private Timestamp createdAt;
+
+	@Column(name = "modified_at", columnDefinition = "timestamp")
+	private Timestamp modifiedAt;
+
 }
